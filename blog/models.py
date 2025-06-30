@@ -22,3 +22,4 @@ class Post(models.Model):
     # Iedere post heeft een STATUS, die d.m.v. een integer wordt uitgedrukt
     # Bij default staat de STATUS op 0 (draft/concept); wanneer deze gepubliceerd wordt, wordt de STATUS op 1 gezet
     status = models.IntegerField(choices=STATUS, default=0)
+    excerpt = models.TextField(blank=True)
