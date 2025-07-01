@@ -26,3 +26,19 @@ class Post(models.Model):
     # auto_now_add => updatet alleen bij aanmaak (dus letterlijk als je op "post" drukt)
     # auto_now => updatet het veld iedere keer (bij iedere wijziging)
     update_on = models.DateTimeField(auto_now = True)
+
+
+class Comment(models.Model):
+    # Het post-veld verwijst naar de Post, vandaar dat de ForeignKey "Post" is
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="comment"
+    )
+    # De auteur verwijst natuurlijk naar de gebruiker en heeft als ForeignKey de User
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="commenter"
+    )
+    body = models.TextField()
+    approved = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    
+
