@@ -8,7 +8,9 @@ node_modules/
 .github/
 cloudinary_python.txt
 .venv/
-notities_relationships.txt
-notities_migrations.txt
-notities_admin_file.txt
-notities_add_users_and_posts.txt
+1_notities_relationships.txt
+2_notities_migrations.txt
+3_notities_admin_file.txt
+4_notities_add_users_and_posts.txt
+gevarieerde_notities.txt
+5_notities_methods_in_models.txt
