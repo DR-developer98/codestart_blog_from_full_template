@@ -23,3 +23,6 @@ class Post(models.Model):
     # Bij default staat de STATUS op 0 (draft/concept); wanneer deze gepubliceerd wordt, wordt de STATUS op 1 gezet
     status = models.IntegerField(choices=STATUS, default=0)
     excerpt = models.TextField(blank=True)
+    # auto_now_add => updatet alleen bij aanmaak (dus letterlijk als je op "post" drukt)
+    # auto_now => updatet het veld iedere keer (bij iedere wijziging)
+    update_on = models.DateTimeField(auto_now = True)

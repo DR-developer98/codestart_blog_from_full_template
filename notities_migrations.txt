@@ -1,0 +1,66 @@
+python manage.py makemigrations
+
+Dit commando resulteert in de aanmaak van een 0002_post_excerpt.py bestand binnenin "migrations".
+
+1) Wat betekent de daarin vermeld "dependencies"?
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('blog', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.AddField(
+            model_name='post',
+            name='excerpt',
+            field=models.TextField(blank=True),
+        ),
+    ]
+
+Volgens mij duidt "dependencies" erop, waar het extra veld "excerpt" uit afgeleid is.
+Dit is gegenereerd vanuit het model in de "blog"-map en is een aanvulling op 
+de in 0001_initial.py vermelde velden.
+
+2) Welke "operations" moeten er uitgevoerd worden?
+migrations.AddField => er moet een extra veld toegevoegd worden
+aan het Post-model, met de naam "excerpt" en van het TextField type.
+Het tekstinvoergebied is leeg (blank=True).
+
+3) python manage.py migrate
+Wat is het verschil tussen -migrate en -makemigrations?
+Volgens mij zorgt de eerste ervoor dat de in het nieuwe migratie-bestand 
+aangegeven operaties ook daadwerkelijk in de App worden doorgevoerd.
+
+"Dependencies" is een lijst die tuples bevat, die uit de volgende elementen bestaat:
+1) de app-naam;
+2) de migraties die toegepast moeten worden, voordat de huidige migratie op haar beurt 
+doorgevoerd kan worden;
+
+Migraties zijn eigenlijk niets anders dan wijzigingen die in de database doorgevoerd moeten worden.
+Operations zorgt voor het daadwerkelijke ten uitvoer brengen van de migraties.
+Het verschil tussen makemigrations en migration is al volgt:
+De eerste creëert het migrations-bestand lokaal, terwijl "migrate" 
+de wijzigingen in de database doorvoert.
+
+"Makemigrations" creëert een bestand, dat als een soort bouwhandleiding acteert.
+Deze handleiding geeft alle stukken (datavelden) weer, die je toegevoegd, verijwderd of 
+in het model gewijzigd hebt.
+
+Iedere keer dat we het commando "migrate" gebruiken, volgt Django deze instructies op om 
+de database dienovereenkomstig te wijzigen.
+We moeten migraties aanmaken en deze migreren iedere keer dat we het database-model wijzigen.
+
+HEEL BELANGRIJK:
+ALS JE WILT ZIEN WAT VOOR MIGRATIES (WIJZIGINGEN) IN JE DATABASE DOORGEVOERD ZOUDEN WORDEN,
+ZONDER OOK DAADWERKELIJK EEN MIGRATIE AAN TE MAKEN, KUN JE GEBRUIKMAKEN VAN EEN "dry run".
+Om dit te doen, gebruik het commando "python manage.py makemigrations --dry-run".
+Wanneer je tevreden bent, kun je overgaan tot "makemigrations" (dus zonder dat staartje).
+
+TIP: gebruik "migrate" op dezelfde manier als je "git add, commit en push" gebruikt.
+Houd de migraties dus klein; push niet te veel wijzigingen in de database tegelijk.
+
+
+VOORBEELD OUTPUT NA MAKEMIGRATIONS --DRY-RUN:
+"Migrations for 'blog':
+  blog\migrations\0003_post_update_on.py
+    - Add field update_on to post"
