@@ -26,6 +26,7 @@ class Post(models.Model):
     # auto_now_add => updatet alleen bij aanmaak (dus letterlijk als je op "post" drukt)
     # auto_now => updatet het veld iedere keer (bij iedere wijziging)
     update_on = models.DateTimeField(auto_now = True)
+
     class Meta:
         ordering = ["created_on"]
     def __str__(self):
@@ -44,6 +45,7 @@ class Comment(models.Model):
     body = models.TextField()
     approved = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         ordering = ["created_on"]
     def __str__(self):
