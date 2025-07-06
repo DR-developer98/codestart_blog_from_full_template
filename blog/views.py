@@ -10,5 +10,6 @@ from .models import Post
     # return HttpResponse("Hello, blog!")
 class PostList(generic.ListView):
     # model = Post
-    queryset = Post.objects.all()
+    # queryset = Post.objects.all()
+    queryset = Post.objects.filter(status=1)
     template_name = "post_list.html"
