@@ -25,7 +25,7 @@ class Post(models.Model):
     excerpt = models.TextField(blank=True)
     # auto_now_add => updatet alleen bij aanmaak (dus letterlijk als je op "post" drukt)
     # auto_now => updatet het veld iedere keer (bij iedere wijziging)
-    update_on = models.DateTimeField(auto_now = True)
+    updated_on = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["created_on"]
@@ -45,6 +45,7 @@ class Comment(models.Model):
     body = models.TextField()
     approved = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
+    new_field = models.SlugField(default=False)
 
     class Meta:
         ordering = ["created_on"]
