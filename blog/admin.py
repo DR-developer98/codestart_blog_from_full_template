@@ -7,9 +7,9 @@ from .models import Post, Comment
 @admin.register(Post)
 class PostAdmin(SummernoteModelAdmin):
 
-    #↓↓↓ Deze regel slaat op de postlijs ↓↓↓
+    #↓↓↓ Deze regel slaat op de postlijst ↓↓↓
     list_display = ('title', 'slug', 'status', 'created_on')
-    #↑↑↑ Deze regel slaat op de postlijs ↑↑↑
+    #↑↑↑ Deze regel slaat op de postlijst ↑↑↑
     # Onderstaande regel staat snellere zoekopdrachten toe
     search_fields = ['title', 'content']
     # Onderstaande regel beheert de "filter"-zijbalk in de post view pagina
