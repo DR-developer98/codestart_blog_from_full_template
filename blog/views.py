@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
+# ↓↓↓ Onderstaande regel is noodzakelijk voor het weergeven van een bevestigingsmelding
+from django.contrib import messages 
 # ↓↓↓ het punt voor "models" refereert aan de huidige directory
 # ↓↓↓ uit models.py wordt de klasse "Post" geïmporteerd
 from .models import Post
+# ↓↓↓ uit forms.py wordt de klasse "CommentForm" geïmporteerd
+from .forms import CommentForm
 # from django.http import HttpResponse
 
 # Create your views here.
@@ -39,6 +43,21 @@ def post_detail(request, slug):
     comment_count = post.comments.filter(approved=True).count()
     # comments en comment_count worden dan aan de context toegevoegd en zodoende
     # aan de template doorgegeven
+
+    #↓↓↓ Onderstaande code is bedoeld voor de verwerking van het POST-request door het formulier
+    if request.method == "POST":
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            messages.add_message(
+                request, messages.SUCCESS,
+                'Comment submitted and awaiting approval'
+            )
+
+    comment_form = CommentForm()
     
     return render(
         request,
@@ -46,5 +65,6 @@ def post_detail(request, slug):
         {"post": post,
          "comments": comments,
          "comment_count": comment_count,
+         "comment_form": comment_form,
          "coder": "Damiano"},
     )
