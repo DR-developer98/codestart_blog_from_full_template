@@ -36,7 +36,7 @@ class Post(models.Model):
 class Comment(models.Model):
     # Het post-veld verwijst naar de Post, vandaar dat de ForeignKey "Post" is
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="comment"
+        Post, on_delete=models.CASCADE, related_name="comments"
     )
     # De auteur verwijst natuurlijk naar de gebruiker en heeft als ForeignKey de User
     author = models.ForeignKey(
