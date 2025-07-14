@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 # ↓↓↓ Onderstaande regel is noodzakelijk voor het weergeven van een bevestigingsmelding
 from django.contrib import messages 
+# ↓↓↓ Stelt ons in staat om bestaande views te refreshen en opnieuw te laden
+from django.http import HttpResponseRedirect
 # ↓↓↓ het punt voor "models" refereert aan de huidige directory
 # ↓↓↓ uit models.py wordt de klasse "Post" geïmporteerd
-from .models import Post
+from .models import Post, Comment
 # ↓↓↓ uit forms.py wordt de klasse "CommentForm" geïmporteerd
 from .forms import CommentForm
 # from django.http import HttpResponse
@@ -76,3 +78,43 @@ def post_detail(request, slug):
          "comment_form": comment_form,
          "coder": "Damiano"},
     )
+
+# Deze view stuurt je terug naar de post webpage nadat je de opmerking hebt bewerkt.
+# Dit terugsturen wordt bereikt d.m.v. HttpsResponseRedirect + reverse (deze laatste is ervoor bedoeld om de post_detail view te refreshen)
+def comment_edit(request, slug, comment_id):
+    """
+    view to edit comments
+    """
+    if request.method == "POST":
+        queryset = Post.objects.filter(status=1)
+        post = get_object_or_404(queryset, slug=slug)
+        comment = get_object_or_404(Comment, pk=comment_id)
+        comment_form = CommentForm(data=request.POST, instance=comment)
+
+        if comment_form.is_valid() and comment.author == request.user:
+            comment = comment_form.save(commit=False)
+            comment.post = post
+            comment.approved = False
+            comment.save()
+            messages.add_message(request, messages.SUCCESS, 'Comment Updated!')
+        else:
+            messages.add_message(request, messages.ERROR, 'Error updating comment!')
+
+    return HttpResponseRedirect(reverse('post_detail', args=[slug]))
+
+
+def comment_delete(request, slug, comment_id):
+    """
+    view to delete comment
+    """
+    queryset = Post.objects.filter(status=1)
+    post = get_object_or_404(queryset, slug=slug)
+    comment = get_object_or_404(Comment, pk=comment_id)
+
+    if comment.author == request.user:
+        comment.delete()
+        messages.add_message(request, messages.SUCCESS, 'Comment deleted!')
+    else:
+        messages.add_message(request, messages.ERROR, 'You can only delete your own comments!')
+
+    return HttpResponseRedirect(reverse('post_detail', args=[slug]))
