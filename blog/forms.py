@@ -1,3 +1,4 @@
+# ↓↓↓ Importeert het "Comment"-model uit models.py in deze directory
 from .models import Comment
 from django import forms
 

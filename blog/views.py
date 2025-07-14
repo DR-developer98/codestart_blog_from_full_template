@@ -46,19 +46,27 @@ def post_detail(request, slug):
 
     #↓↓↓ Onderstaande code is bedoeld voor de verwerking van het POST-request door het formulier
     if request.method == "POST":
+        print("Received a POST request")
         comment_form = CommentForm(data=request.POST)
+        # ↓↓↓ if-statement: gaat na of het formulier correct (en volledig) is ingevuld
         if comment_form.is_valid():
+            # we roepen de .save-methode aan van comment_form + (commit=False) om een de opmerking tijdelijk als object op te slaan alvorens dit de databse in te sturen
+            # 1) Dit doen we doordat we de opmerking van een "author" en een "post" moeten voorzien (Django accepteert bij default geen "nulL", dus geen leeggelaten velden).
             comment = comment_form.save(commit=False)
+            # 2) Als auteur vullen we de naam van de huidig ingelogde gebruiker (request.user slaat op de ingelogde gebruiker). ForeignKey-veld
             comment.author = request.user
+            # 3) Als post-waarde vullen we het resultaat in van de get_object_or_404 (zie code aan het begin van deze view, besproken in eerdere secties van dit cursusblok). ForeignKey-veld
             comment.post = post
+            # Nu we comment.author en comment.post hebben ingevuld, kunnen we opnieuw .save. ==> dit stuurt de opmerking de database in.
             comment.save()
             messages.add_message(
                 request, messages.SUCCESS,
                 'Comment submitted and awaiting approval'
             )
-
+    # Onderstaande regel is ervoor bedoeld om de inhoud van het formulier te resetten, zodat de gebruiker desgewenst een tweede opmerking kan plaatsen.
     comment_form = CommentForm()
     
+    print("About to render template")
     return render(
         request,
         "blog/post_detail.html",
